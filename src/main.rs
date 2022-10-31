@@ -20,5 +20,20 @@ fn main() {
     info!("args have been parsed");
     warn!("cli port is {}", cli.port);
     print!("port is {}", cli.port);
-    error!("something unexpected")
+    error!("something unexpected");
+    print!("{}", answer());
+}
+
+fn answer() -> i32{
+    return 42;
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    
+    #[test]
+    fn test_answer(){
+        assert_eq!(answer(), 42);
+    } 
 }

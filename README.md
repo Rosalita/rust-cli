@@ -35,7 +35,6 @@ syntax originates from C#.
 
 `derive` specifies a list of `traits` to process. 
 
-
 ## Clap Cli Parser
 
 The docs for `clap` are at https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html
@@ -87,6 +86,22 @@ will fall back to a `noop` implementation that ignores all log messages.
 To start using the `env_logger` logger, add it to Cargo dependencies, then initialise a logger with `env_logger::init();`
 it's documenation is at `https://docs.rs/env_logger/0.9.1/env_logger/#`. `env_logger` also contains a builder which can be used to 
 change the default log level in code rather than using the `RUST_LOG` env var.
+
+## Testing
+
+Rust has a built in testing framework and tests can be written using the `#[test]` attribute. 
+Tests can live anywhere and Cargo will find and run them but there are two specific conventions.
+
+* Unit tests - these live in the same file as the code they test. 
+It's possible to move them to a different file, although this in uncommon it could be helpful for large projects.
+They have a have a config attribute `#[cfg(test)]` and are in a module called `tests`.
+Rust allows both public and private functions to be tested directly. To test private functions `use super::*;` must be in the 
+tests module.
+
+* Integration tests - live in a `tests` folder at top level next to `src`. Cargo knows to look for integration tests here and 
+compiles each file into its own crate.
+
+Tests are run with `cargo test`.
 
 ## Building and Running
 
