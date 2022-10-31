@@ -69,6 +69,25 @@ struct Foo {
 }
 ```
 
+## Logging
+
+There are two parts to logging in rust:
+* The fascade, this lives in the crate `https://crates.io/crates/log` with docs at `https://docs.rs/log/latest/log/`.
+The fascade is the logging API that Rust code can use with actual logging implementation abstracted. The reason for this
+is that if a library uses the fascade, a consumer of the library can then select the most appropriate logging implementation.
+
+* A logging implementation which is compatible with the fascade. For Cli tools `env_logger` is a good choice, 
+see `https://docs.rs/env_logger/0.9.1/env_logger/`. By default `env_logger` writes to `stderr`, but can be configured to write to `stdout`.
+By default all logging is disabled except for the `error` level. Logging is controlled by the `RUST_LOG` env var.
+
+To use the fascade, add `log` to Cargo dependencies, then `use log::{trace, debug, info, warn, error};` and call the fascade API using
+macros like `trace!("foo");`, `debug!("bar");` and `error!("baz")`. Remember that if there is no logging implementation, the fascade
+will fall back to a `noop` implementation that ignores all log messages.
+
+To start using the `env_logger` logger, add it to Cargo dependencies, then initialise a logger with `env_logger::init();`
+it's documenation is at `https://docs.rs/env_logger/0.9.1/env_logger/#`. `env_logger` also contains a builder which can be used to 
+change the default log level in code rather than using the `RUST_LOG` env var.
+
 ## Building and Running
 
 `cargo build` generates the executable and outputs it to the `target` directory.
@@ -78,5 +97,8 @@ on which configuration was build.
 Running executable with --help shows the doc comments with usage, arguments and options.
 
 To run specifying an option
- * long form: `./target/debug/rust-httpserver.exe --port 1234` 
- * short form: `./target/debug/rust-httpserver.exe -p 1234`
+ * long form: `./target/debug/rust-cli.exe --port 1234` 
+ * short form: `./target/debug/rust-cli.exe -p 1234`
+
+By default only error logs will be shown, to see different logs set the `RUST_LOG` env var as appropriate.
+To see all logs set the level to trace `export RUST_LOG=trace`.
